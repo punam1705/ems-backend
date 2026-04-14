@@ -12,4 +12,5 @@ EXPOSE 8080
 
 # CMD ["sh", "-c", "java -Dserver.port=$PORT -jar target/ems-backend-0.0.1-SNAPSHOT.jar"]
 
-CMD ["java", "-Xmx256m", "-Xms128m", "-Server.port=$PORT", "-jar", "target/ems-backend-0.0.1-SNAPSHOT.jar"]
+# CMD ["java", "-Xmx256m", "-Xms128m", "-Server.port=$PORT", "-jar", "target/ems-backend-0.0.1-SNAPSHOT.jar"]
+CMD ["sh", "-c", "java -Xmx256m -Xms128m -Dserver.port=$PORT -jar target/ems-backend-0.0.1-SNAPSHOT.jar"]
