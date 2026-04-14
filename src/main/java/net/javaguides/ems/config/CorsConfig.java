@@ -16,9 +16,9 @@ public class CorsConfig {
 
         config.setAllowCredentials(true);
 //        config.addAllowedOrigin("http://localhost:3000");
-        config.setAllowedOrigins(List.of(
+        config.setAllowedOriginPatterns(List.of(
                 "http://localhost:3000",
-                "https://ems-frontend-kappa-two.vercel.app",
+//                "https://ems-frontend-kappa-two.vercel.app",
                 "https://*.vercel.app"
 
         ));
