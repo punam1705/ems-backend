@@ -18,7 +18,9 @@ public class CorsConfig {
 //        config.addAllowedOrigin("http://localhost:3000");
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "https://ems-frontend-kappa-two.vercel.app/"
+                "https://ems-frontend-kappa-two.vercel.app",
+                "https://*.vercel.app"
+
         ));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
