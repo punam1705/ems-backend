@@ -6,6 +6,7 @@ import net.javaguides.ems.entity.Employee;
 import net.javaguides.ems.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     //Build Add employee REST API
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto){
         EmployeeDto savedEmployee=employeeService.createEmployee(employeeDto);
@@ -25,6 +27,7 @@ public class EmployeeController {
     }
 
     //Build Get Employee REST API
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") Long employeeId){
        EmployeeDto employeeDto= employeeService.getEmployeeById(employeeId);
@@ -32,12 +35,14 @@ public class EmployeeController {
     }
 
     //Build Get All Employees REST API
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
         List<EmployeeDto> employees= employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
 // Build update employee REST API
+@PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,
                                                       @RequestBody EmployeeDto updatedEmployee){
@@ -46,6 +51,7 @@ public class EmployeeController {
     }
 
     // Build delete REST API
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteeEmployee(@PathVariable("id") Long employeeId){
         employeeService.deleteEmployee(employeeId);
