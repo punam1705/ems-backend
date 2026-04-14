@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.*;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.List;
+
 @Configuration
 public class CorsConfig {
     @Bean
@@ -13,7 +15,11 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
+//        config.addAllowedOrigin("http://localhost:3000");
+        config.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "https://ems-frontend-kappa-two.vercel.app/"
+        ));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

@@ -8,6 +8,7 @@ import jakarta.servlet.http.*;
 import net.javaguides.ems.entity.User;
 import net.javaguides.ems.repository.UserRepository;
 import net.javaguides.ems.utility.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,6 +19,9 @@ import java.io.IOException;
 
 @Component
 public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     private final UserRepository userRepository;
 
     public OAuthSuccessHandler(UserRepository userRepository) {
@@ -50,7 +54,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         System.out.println("USER EMAIL = " + user.getEmail());
         String token = JwtUtil.generateToken(user.getEmail(),user.getRole());
 
-        String redirectUrl = "http://localhost:3000/oauth-success?token=" + token;
+        String redirectUrl = frontendUrl +"/oauth-success?token=" + token;
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
