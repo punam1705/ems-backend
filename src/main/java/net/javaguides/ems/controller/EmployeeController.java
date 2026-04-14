@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/employees")
