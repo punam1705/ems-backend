@@ -3,9 +3,11 @@ package net.javaguides.ems.service.impl;
 import lombok.AllArgsConstructor;
 import net.javaguides.ems.dto.EmployeeDto;
 import net.javaguides.ems.entity.Employee;
+import net.javaguides.ems.entity.User;
 import net.javaguides.ems.exception.ResourceNotFoundException;
 import net.javaguides.ems.mapper.EmployeeMapper;
 import net.javaguides.ems.repository.EmployeeRepository;
+import net.javaguides.ems.repository.UserRepository;
 import net.javaguides.ems.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
-
+    private UserRepository userRepository;
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
         Employee employee= EmployeeMapper.mapToEmployee(employeeDto);
@@ -31,7 +33,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee= employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee is not exists with given id: "+ employeeId));
 
-        return EmployeeMapper.mapToEmployeeDto(employee);
+//        return EmployeeMapper.mapToEmployeeDto(employee);
+        System.out.println("Entity JoiningDate = " + employee.getJoiningDate());
+        System.out.println("Entity Salary = " + employee.getSalary());
+
+        EmployeeDto dto = EmployeeMapper.mapToEmployeeDto(employee);
+
+        System.out.println("DTO JoiningDate = " + dto.getJoiningDate());
+        System.out.println("DTO Salary = " + dto.getSalary());
+
+        return dto;
     }
 
     @Override
@@ -49,8 +60,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setFirstName(updatedEmployee.getFirstName());
         employee.setLastName(updatedEmployee.getLastName());
         employee.setEmail(updatedEmployee.getEmail());
-
+        employee.setJoiningDate(updatedEmployee.getJoiningDate());
+        employee.setSalary(updatedEmployee.getSalary());
         Employee updatedEmployeeObj =  employeeRepository.save(employee);
+
+//        User user = updatedEmployeeObj.getUser();
+        User user = userRepository.findByEmail(employee.getEmail())
+                .orElse(null);
+
+        if (user != null) {
+
+            user.setName(
+                    updatedEmployeeObj.getFirstName()
+                            + " "
+                            + updatedEmployeeObj.getLastName());
+
+            user.setEmail(updatedEmployeeObj.getEmail());
+
+            userRepository.save(user);
+        }
+
         return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);
     }
 

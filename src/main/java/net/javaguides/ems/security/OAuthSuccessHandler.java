@@ -5,9 +5,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 //import jakarta.servlet.http.HttpServletResponse;
+import net.javaguides.ems.entity.Employee;
 import net.javaguides.ems.entity.User;
+import net.javaguides.ems.repository.EmployeeRepository;
 import net.javaguides.ems.repository.UserRepository;
 import net.javaguides.ems.utility.JwtUtil;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -23,9 +26,11 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private String frontendUrl;
 
     private final UserRepository userRepository;
+private final EmployeeRepository employeeRepository;
 
-    public OAuthSuccessHandler(UserRepository userRepository) {
+    public OAuthSuccessHandler(UserRepository userRepository, EmployeeRepository employeeRepository) {
         this.userRepository = userRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -40,14 +45,33 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String email = (String) oAuth2User.getAttributes().get("email");
         String name = (String) oAuth2User.getAttributes().get("name");
 
+//        User user = userRepository.findByEmail(email)
+//                .orElseGet(() -> {
+//
+//                    User newUser = new User();
+//                    newUser.setEmail(email);
+//                    newUser.setName(name);
+//                    newUser.setRole("USER");
+//                    return userRepository.save(newUser);
+//                });
+
         User user = userRepository.findByEmail(email)
                 .orElseGet(() -> {
 
                     User newUser = new User();
-                    newUser.setEmail(email);
                     newUser.setName(name);
+                    newUser.setEmail(email);
                     newUser.setRole("USER");
-                    return userRepository.save(newUser);
+
+                    User savedUser = userRepository.save(newUser);
+
+                    Employee employee = new Employee();
+                    employee.setUser(savedUser);
+
+
+                    employeeRepository.save(employee);
+
+                    return savedUser;
                 });
 
         System.out.println(oAuth2User.getAttributes());

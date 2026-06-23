@@ -1,6 +1,7 @@
 package net.javaguides.ems.controller;
 
 import lombok.AllArgsConstructor;
+import net.javaguides.ems.dto.UserProfileDto;
 import net.javaguides.ems.entity.User;
 import net.javaguides.ems.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,37 @@ public class UserController {
     private UserRepository userRepository;
 
     // 🔥 GET CURRENT USER PROFILE
+//    @GetMapping("/me")
+//    public ResponseEntity<User> getCurrentUser(Authentication authentication) {
+//
+//        String email = authentication.getName(); // JWT se aata hai
+//
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//
+//        return ResponseEntity.ok(user);
+//    }
     @GetMapping("/me")
-    public ResponseEntity<User> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<UserProfileDto> getCurrentUser(Authentication authentication) {
 
-        String email = authentication.getName(); // JWT se aata hai
+        String email = authentication.getName();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(user);
+        UserProfileDto dto = new UserProfileDto();
+
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+
+        if (user.getEmployee() != null) {
+            dto.setJoiningDate(user.getEmployee().getJoiningDate());
+            dto.setSalary(user.getEmployee().getSalary());
+        }
+
+        return ResponseEntity.ok(dto);
     }
 
     // 🔥 UPDATE CURRENT USER PROFILE
