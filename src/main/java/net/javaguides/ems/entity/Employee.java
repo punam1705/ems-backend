@@ -29,8 +29,11 @@ private Long id;
 
     @Column(name ="email_id",nullable = false,unique = true)
     private String email;
+
+    @Column(name = "joining_date")
     private LocalDate joiningDate;
 
+    @Column(name = "salary")
     private Double salary;
 
     @OneToOne
